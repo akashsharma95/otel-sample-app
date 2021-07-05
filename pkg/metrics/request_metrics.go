@@ -30,18 +30,19 @@ func InstrumentHttpRequest(c *gin.Context, start time.Time) {
 
 	meter := global.Meter("notes")
 
-	reqHist, err := meter.NewFloat64ValueRecorder(
+	counter := metric.Must(meter).NewInt64Counter("random_counter", metric.WithDescription("random counter"))
+
+	reqHist := metric.Must(meter).NewFloat64ValueRecorder(
 		"request_histogram",
 		metric.WithUnit(unit.Milliseconds),
 		metric.WithDescription("HTTP server request duration histogram"),
 	)
-	if err != nil {
-		panic(err)
-	}
 
 	reqHist.Record(c, elapsed, attribute.String("http_method", method),
 		attribute.String("route", route),
 		attribute.String("http_status_code", status))
+
+	counter.Add(c, 1, attribute.String("key", method))
 
 	// meter.RecordBatch(c, attrs, reqHist.Measurement(elapsed))
 }

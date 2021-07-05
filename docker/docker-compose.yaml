@@ -16,8 +16,8 @@ services:
 
   # Collector
   otel-collector:
-    image: ${OTELCOL_IMG}
-    command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
+    image: otel/opentelemetry-collector-dev:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
@@ -33,8 +33,8 @@ services:
 
   # Agent
   otel-agent:
-    image: ${OTELCOL_IMG}
-    command: ["--config=/etc/otel-agent-config.yaml", "${OTELCOL_ARGS}"]
+    image: otel/opentelemetry-collector-dev:latest
+    command: ["--config=/etc/otel-agent-config.yaml"]
     volumes:
       - ./otel-agent-config.yaml:/etc/otel-agent-config.yaml
     ports:
